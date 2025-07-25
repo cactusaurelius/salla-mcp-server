@@ -3,18 +3,7 @@
 This project provides a Model Context Protocol (MCP) server that connects AI assistants like Claude and Cursor to your Salla e-commerce store. It enables AI-powered store management, product operations, order processing, and customer analytics through natural language interactions.
 
 > [!NOTE]
-> This is a specialized MCP server for Salla stores built on the MCP Boilerplate foundation. You'll need a Salla store and Partner Portal access to use this server.
-
-## What You'll Get
-
-- An MCP server that connects your Salla store to AI assistants
-- Secure OAuth authentication with Salla
-- AI-powered tools for:
-  - Product management (create, update, list products)
-  - Order processing (view, update order status)
-  - Customer management (view customer details)
-  - Store analytics and information
-- Optional payment processing for premium features
+> This is a specialized MCP server for Salla stores. You'll need a Salla store and Partner Portal access to use this server.
 
 ## Prerequisites
 
@@ -40,54 +29,7 @@ cd salla-mcp-server
 npm install
 ```
 
-### Step 2: Set Up the Database
-
-1. Install Wrangler (Cloudflare's tool) if you haven't already:
-```bash
-npm install -g wrangler
-```
-
-2. Create the required KV namespaces:
-```bash
-npx wrangler kv namespace create "OAUTH_KV"
-npx wrangler kv namespace create "OAUTH_KV" --preview
-npx wrangler kv namespace create "TOKENS"
-npx wrangler kv namespace create "TOKENS" --preview
-```
-
-3. After running these commands, you'll see output with `id` and `preview_id` values
-
-4. Open the `wrangler.jsonc` file and update the KV namespace bindings with your IDs:
-```json
-"kv_namespaces": [
-  {
-    "binding": "OAUTH_KV",
-    "id": "your-oauth-kv-id",
-    "preview_id": "your-oauth-kv-preview-id"
-  },
-  {
-    "binding": "TOKENS",
-    "id": "your-tokens-id", 
-    "preview_id": "your-tokens-preview-id"
-  }
-]
-```
-
-### Step 3: Configure Your Salla OAuth Application
-
-1. Go to the [Salla Partner Portal](https://salla.partners/)
-2. Navigate to your OAuth application or create a new one
-3. Configure the OAuth application settings:
-   - **Application Name**: Your MCP Server name
-   - **Redirect URI**: `http://localhost:8787/callback/salla` (for local development)
-   - **Scopes**: Ensure you have the necessary permissions for:
-     - Store information access
-     - Products management
-     - Orders management  
-     - Customers access
-4. Note your **Client ID** and **Client Secret** from the application settings
-
-### Step 4: Set Up Your Local Settings
+### Step 2: Set Up Your Local Settings
 
 1. Create your environment variables file:
 ```bash
@@ -99,28 +41,23 @@ cp .dev.vars.example .dev.vars
 # Base configuration
 BASE_URL="http://localhost:8787"
 WORKER_URL="http://localhost:8787"
-COOKIE_ENCRYPTION_KEY="generate-a-random-string-at-least-32-characters"
+
+# Generate with: openssl rand -base64 32
+ENCRYPTION_KEY=
 
 # Salla OAuth Configuration
 SALLA_CLIENT_ID="your-salla-client-id"
 SALLA_CLIENT_SECRET="your-salla-client-secret"
-SALLA_BASE_URL="https://api.salla.dev"
 SALLA_AUTH_URL="https://accounts.salla.sa/oauth2/auth"
 SALLA_TOKEN_URL="https://accounts.salla.sa/oauth2/token"
-
-# Optional: Stripe configuration (if using premium features)
-# STRIPE_SECRET_KEY=""
-# STRIPE_SUBSCRIPTION_PRICE_ID=""
-# STRIPE_ONE_TIME_PRICE_ID=""
-# STRIPE_METERED_PRICE_ID=""
 ```
 
-For the `COOKIE_ENCRYPTION_KEY`, generate a secure random string:
+For the `ENCRYPTION_KEY`, generate a secure random string:
 ```bash
 openssl rand -hex 32
 ```
 
-### Step 5: Start Your Server Locally
+### Step 3: Start Your Server Locally
 
 1. Run the development server:
 ```bash
@@ -130,7 +67,7 @@ npm run dev
 2. Your server will be available at `http://localhost:8787`
 3. The MCP endpoint will be at `http://localhost:8787/sse`
 
-### Step 6: Test Your Setup
+### Step 4: Test Your Setup
 
 You can test your Salla MCP server with various AI assistants:
 
@@ -170,12 +107,6 @@ npx @modelcontextprotocol/inspector@0.11.0
 3. Use the web interface to test individual tools
 4. Debug request/response data during development
 
-#### With Cursor:
-
-1. Configure Cursor to connect to your MCP server
-2. Use AI-powered code assistance with access to your Salla store data
-3. Generate store reports, analyze customer data, or automate store operations
-
 ## Available Tools
 
 Your Salla MCP server provides these AI tools:
@@ -200,10 +131,6 @@ Your Salla MCP server provides these AI tools:
 - **`salla-customers-list`**: List customers with search capabilities
 - **`salla-customer-details`**: Get detailed customer information
 
-### Basic Tools
-- **`add`**: Simple addition tool (example)
-- **`calculate`**: Basic calculator (example)
-
 ## Going Live (Deployment)
 
 When you're ready to deploy your server:
@@ -223,10 +150,9 @@ npx wrangler deploy
 ```bash
 npx wrangler secret put SALLA_CLIENT_ID
 npx wrangler secret put SALLA_CLIENT_SECRET  
-npx wrangler secret put COOKIE_ENCRYPTION_KEY
+npx wrangler secret put ENCRYPTION_KEY
 npx wrangler secret put BASE_URL
 npx wrangler secret put WORKER_URL
-npx wrangler secret put SALLA_BASE_URL
 npx wrangler secret put SALLA_AUTH_URL
 npx wrangler secret put SALLA_TOKEN_URL
 ```
@@ -237,15 +163,15 @@ For `BASE_URL` and `WORKER_URL`, use your production Cloudflare URL.
 
 You can extend your Salla MCP server with custom tools:
 
-### Creating a Free Tool
+### Creating a Custom Tool
 
 1. Create a new file in `src/tools/` (e.g., `myCustomTool.ts`):
 
 ```typescript
 import { z } from "zod";
-import { experimental_PaidMcpAgent as PaidMcpAgent } from "@stripe/agent-toolkit/cloudflare";
+import { McpAgent } from "@modelcontextprotocol/sdk";
 
-export function myCustomTool(agent: PaidMcpAgent<Env, any, any>) {
+export function myCustomTool(agent: McpAgent) {
   const server = agent.server;
   
   server.tool(
@@ -280,7 +206,7 @@ tools.myCustomTool(this);
 Access the authenticated user's Salla store data in your custom tools:
 
 ```typescript
-export function myStoreTool(agent: PaidMcpAgent<Env, any, any>) {
+export function myStoreTool(agent: McpAgent) {
   const server = agent.server;
   
   server.tool(
@@ -292,7 +218,7 @@ export function myStoreTool(agent: PaidMcpAgent<Env, any, any>) {
       const accessToken = props.accessToken;
       
       // Make authenticated requests to Salla API
-      const response = await fetch(`${agent.env.SALLA_BASE_URL}/admin/v2/products`, {
+      const response = await fetch(`https://api.salla.dev/admin/v2/products`, {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
@@ -330,12 +256,11 @@ See the [Salla API Documentation](https://docs.salla.dev/) for complete endpoint
 |----------|-------------|----------|
 | `SALLA_CLIENT_ID` | Your Salla OAuth application client ID | Yes |
 | `SALLA_CLIENT_SECRET` | Your Salla OAuth application client secret | Yes |
-| `SALLA_BASE_URL` | Salla API base URL (`https://api.salla.dev`) | Yes |
 | `SALLA_AUTH_URL` | Salla OAuth authorization URL | Yes |
 | `SALLA_TOKEN_URL` | Salla OAuth token exchange URL | Yes |
 | `BASE_URL` | Your server's base URL | Yes |
 | `WORKER_URL` | Your Cloudflare Worker URL | Yes |
-| `COOKIE_ENCRYPTION_KEY` | Random 32+ character encryption key | Yes |
+| `ENCRYPTION_KEY` | Random 32+ character encryption key | Yes |
 
 ## Troubleshooting
 
