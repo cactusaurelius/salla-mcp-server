@@ -4,6 +4,7 @@
 declare namespace Cloudflare {
 	interface Env {
 		OAUTH_KV: KVNamespace;
+        TOKENS: KVNamespace;
 		GITHUB_CLIENT_ID: string;
 		GITHUB_CLIENT_SECRET: string;
 		GOOGLE_CLIENT_ID: string;
@@ -17,6 +18,13 @@ declare namespace Cloudflare {
 		STRIPE_SUBSCRIPTION_PRICE_ID: string;
 		STRIPE_METERED_PRICE_ID: string;
 		BASE_URL: string;
+        SALLA_CLIENT_ID: string;
+        SALLA_CLIENT_SECRET: string;
+        SALLA_BASE_URL: string;
+        SALLA_AUTH_URL: string;
+        SALLA_TOKEN_URL: string;
+        WORKER_URL: string;
+        ENCRYPTION_KEY: string;
 		MCP_OBJECT: DurableObjectNamespace<import("./src/index").BoilerplateMCP>;
 	}
 }

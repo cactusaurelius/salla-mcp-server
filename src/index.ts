@@ -1,64 +1,47 @@
 import OAuthProvider from "@cloudflare/workers-oauth-provider";
-import { GoogleHandler } from "./auth/google-handler";
-import { Props } from "./auth/oauth";
-import {
-	PaymentState,
-	experimental_PaidMcpAgent as PaidMcpAgent,
-  } from '@stripe/agent-toolkit/cloudflare';
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import stripeWebhookHandler from "./webhooks/stripe";
+import { SallaHandler } from "./auth/salla-handler";
+import { McpServer, McpAgent } from "@modelcontextprotocol/sdk";
 import * as tools from './tools';
 
-type State = PaymentState & {};
-
-type AgentProps = Props & {
-	STRIPE_SUBSCRIPTION_PRICE_ID: string;
-	BASE_URL: string;
-};
-
 // Define our MCP agent with tools
-export class BoilerplateMCP extends PaidMcpAgent<Env, State, AgentProps> {
+export class SallaMCP extends McpAgent {
 	server = new McpServer({
-		name: "Boilerplate MCP",
+		name: "Salla",
 		version: "1.0.0",
+		description: "Connect to your Salla store to manage products, orders, customers, and analytics through AI assistants.",
+		logo: "https://accounts.salla.sa/./accounts/images/salla-smile.svg",
 	});
 
 	async init() {
-		// Example free tools (that don't require payment but do require a logged in user)
-		tools.addTool(this);
-		tools.calculateTool(this);
+		// Salla API Tools
+		tools.sallaOrdersListTool(this);
+		tools.sallaOrderDetailsTool(this);
+		tools.sallaOrderStatusUpdateTool(this);
+		tools.sallaProductsListTool(this);
+		tools.sallaProductDetailsTool(this);
+		tools.sallaProductCreateTool(this);
+		tools.sallaProductUpdateTool(this);
+		tools.sallaCustomersListTool(this);
+		tools.sallaCustomerDetailsTool(this);
+		tools.sallaStoreInfoTool(this);
+		tools.sallaCategoriesListTool(this);
+		tools.sallaCategoryDetailsTool(this);
+		tools.sallaBrandsListTool(this);
 
-		// Example of a free tool that checks for active subscriptions and the status of the logged in user's Stripe customer ID
-		tools.checkPaymentHistoryTool(this, {
-			BASE_URL: this.env.BASE_URL,
-			STRIPE_SECRET_KEY: this.env.STRIPE_SECRET_KEY
-		});
-
-		// Example of a paid tool that requires a logged in user and a one-time payment
-		tools.onetimeAddTool(this, {
-			STRIPE_ONE_TIME_PRICE_ID: this.env.STRIPE_ONE_TIME_PRICE_ID,
-			BASE_URL: this.env.BASE_URL
-		});
-
-		// Example of a paid tool that requires a logged in user and a subscription
-		tools.subscriptionTool(this, {
-			STRIPE_SUBSCRIPTION_PRICE_ID: this.env.STRIPE_SUBSCRIPTION_PRICE_ID,
-			BASE_URL: this.env.BASE_URL
-		});
-
-		// Example of a paid tool that requires a logged in user and a subscription with metered usage
-		tools.meteredAddTool(this, {
-			STRIPE_METERED_PRICE_ID: this.env.STRIPE_METERED_PRICE_ID,
-			BASE_URL: this.env.BASE_URL
-		});
+		// Salla Reports Tools
+		tools.sallaAbandonedCartsTool(this);
+		tools.sallaHourlyVisitorsTool(this);
+		tools.sallaSummaryReportTool(this);
+		tools.sallaLatestOrdersTool(this);
+		tools.sallaGeneralStatisticsTool(this);
 	}
 }
 
 // Create an OAuth provider instance for auth routes
 const oauthProvider = new OAuthProvider({
 	apiRoute: "/sse",
-	apiHandler: BoilerplateMCP.mount("/sse") as any,
-	defaultHandler: GoogleHandler as any,
+	apiHandler: SallaMCP.mount("/sse") as any,
+	defaultHandler: SallaHandler as any,
 	authorizeEndpoint: "/authorize",
 	tokenEndpoint: "/token",
 	clientRegistrationEndpoint: "/register",
@@ -76,20 +59,6 @@ export default {
 			return new Response(homePage.default, {
 				headers: { "Content-Type": "text/html" },
 			});
-		}
-
-		// Handle payment success page
-		if (path === "/payment/success") {
-			// @ts-ignore
-			const successPage = await import('./pages/payment-success.html');
-			return new Response(successPage.default, {
-				headers: { "Content-Type": "text/html" },
-			});
-		}
-		
-		// Handle webhook
-		if (path === "/webhooks/stripe") {
-			return stripeWebhookHandler.fetch(request, env);
 		}
 		
 		// All other routes go to OAuth provider

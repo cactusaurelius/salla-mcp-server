@@ -3,33 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Better Prompts</title>
+    <title>Salla MCP Server</title>
+    <link rel="icon" href="https://accounts.salla.sa/./accounts/images/salla-smile.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        body { 
+            -webkit-font-smoothing: antialiased; 
+            -moz-osx-font-smoothing: grayscale; 
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
     </style>
 </head>
-<body class="bg-slate-50 flex flex-col items-center justify-center min-h-screen p-4 sm:p-6 antialiased">
-    <div class="w-full max-w-lg">
-
-        <div class="text-center mb-8">
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Welcome to MCP Boilerplate</h1>
-        </div>
-
-        <div class="bg-white border border-gray-200 rounded-xl shadow-2xs">
-            <div class="p-5 sm:p-7">
-                <p class="text-md text-gray-600 text-center">
-                    This is a simple example of an index page for the MCP boilerplate.
+<body class="bg-gray-50 min-h-screen antialiased">
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="gradient-bg text-white py-12">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+                <div class="flex items-center justify-center mb-6">
+                    <div class="w-12 h-12 mr-4 bg-white rounded-lg flex items-center justify-center shadow-lg p-2">
+                        <img src="https://accounts.salla.sa/./accounts/images/salla-smile.svg" alt="Salla Logo"
+                            class="w-full h-full object-contain">
+                    </div>
+                    <h1 class="text-3xl sm:text-4xl font-bold">Salla MCP Server</h1>
+                </div>
+                <p class="text-xl text-blue-100 max-w-2xl mx-auto">
+                    Connect your Salla store to AI assistants with powerful e-commerce tools and automation
                 </p>
             </div>
-        </div>
+        </header>
 
-        <div class="text-center mt-6">
-            <p class="text-xs text-gray-600">
-                Some Ts and Cs here. Maybe a link to a privacy policy.
-            </p>
-        </div>
+        <!-- Main Content -->
+        <main class="flex-1 py-12">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6">
 
+                <!-- Status Card -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 mb-8">
+                    <div class="p-6 text-center">
+                        <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-4">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-xl font-semibold text-gray-900 mb-2">Server Running</h2>
+                        <p class="text-gray-600">Your Salla MCP server is active and ready to connect with AI
+                            assistants.</p>
+                    </div>
+                </div>
+
+                <!-- Features Grid -->
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900">Product Management</h3>
+                        </div>
+                        <p class="text-gray-600">Create, update, and manage your Salla store products through AI
+                            assistants.</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900">Order Processing</h3>
+                        </div>
+                        <p class="text-gray-600">View, update, and track orders with automated status management.</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                                <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900">Customer Management</h3>
+                        </div>
+                        <p class="text-gray-600">Access customer information and manage relationships efficiently.</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
+                                <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                                    </path>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900">Store Analytics</h3>
+                        </div>
+                        <p class="text-gray-600">Get insights into your store performance and business metrics.</p>
+                    </div>
+                    </div>
+
+                <!-- Getting Started -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Getting Started</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <span
+                                class="flex-shrink-0 w-6 h-6 bg-blue-600 text-white text-sm font-medium rounded-full flex items-center justify-center mr-3 mt-0.5">1</span>
+                            <div>
+                                <p class="font-medium text-gray-900">Connect your AI assistant</p>
+                                <p class="text-gray-600 text-sm">Configure your MCP client to connect to this server</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span
+                                class="flex-shrink-0 w-6 h-6 bg-blue-600 text-white text-sm font-medium rounded-full flex items-center justify-center mr-3 mt-0.5">2</span>
+                            <div>
+                                <p class="font-medium text-gray-900">Authenticate with Salla</p>
+                                <p class="text-gray-600 text-sm">Grant access to your Salla store through OAuth authentication</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span
+                                class="flex-shrink-0 w-6 h-6 bg-blue-600 text-white text-sm font-medium rounded-full flex items-center justify-center mr-3 mt-0.5">3</span>
+                            <div>
+                                <p class="font-medium text-gray-900">Start automating</p>
+                                <p class="text-gray-600 text-sm">Use natural language to manage your store through your AI assistant</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white border-t border-gray-200 py-8">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+                <p class="text-sm text-gray-500">
+                    Powered by Salla API • Built with Model Context Protocol (MCP)
+                </p>
+            </div>
+        </footer>
     </div>
 </body>
 </html> 
